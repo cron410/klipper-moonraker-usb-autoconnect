@@ -1,5 +1,5 @@
 #!/bin/bash
-CONFIGFILE="/usr/local/src/octoprint-usb-autoconnect/octoprint_usb_autoconnect.conf"
+CONFIGFILE="/usr/local/src/klipper-moonraker-usb-autoconnect/klipper_usb_autoconnect.conf"
 
 if [ ! -f ${CONFIGFILE} ]; then
     echo "Configuration file \"${CONFIGFILE}\""
@@ -10,4 +10,4 @@ fi
 . ${CONFIGFILE}
 
 # Send POST request to reconnect serial connection
-curl -siL -X POST -H "Content-Type: application/json" -H "X-Api-Key: ${APIKEY}" ${OCTOHOST}/api/connection -d '{"command":"connect"}'
+curl -X POST http://${HOST}:${PORT}/printer/firmware_restart
