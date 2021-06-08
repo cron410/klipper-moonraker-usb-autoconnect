@@ -1,0 +1,7 @@
+[Unit]
+Description=Klipper USB auto connect
+
+[Service]
+Type=oneshot
+RemainAfterExit=no
+ExecStart=/usr/local/bin/klipper_usb_autoconnect
