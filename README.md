@@ -7,8 +7,8 @@ Simple bash script (and systemd service) to automatically reconnect the serial c
 3. Symlink (or copy) script and service:
 
     ```shell
-    cp klipper_usb_autoconnect /usr/local/bin/klipper_usb_autoconnect
-    klipper_usb_autoconnect.service /etc/systemd/system/klipper_usb_autoconnect.service
+    cp klipper-moonraker-usb-autoconnect /usr/local/bin/klipper_usb_autoconnect
+    cp klipper-moonraker-usb-autoconnect/klipper_usb_autoconnect.service /etc/systemd/system/klipper_usb_autoconnect.service
     ```
 
 4. Create the `udev` USB hook:
