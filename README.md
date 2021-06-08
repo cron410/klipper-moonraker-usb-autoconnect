@@ -1,41 +1,24 @@
-# octoprint-usb-autoconnect
-
-[![](https://up.frd.mn/nnTh5bQhjn.jpg)](https://up.frd.mn/21aibgyD15.mp4)
-<sup><sub>(Click the picture above for a short demonstration video)</sup></sub>
-
-Simple bash script (and systemd service) to automatically reconnect the serial connection of OctoPrint using REST whenever the USB cable of the printer is getting plugged in. This is accomplished by a custom udev rule that hooks into the USB subsystem and gets triggered whenever a certain device is found.
+Simple bash script (and systemd service) to automatically reconnect the serial connection of Klipper using REST whenever the USB cable of the printer is plugged in. This is accomplished by a custom udev rule that hooks into the USB subsystem and gets triggered whenever a certain device is found.
 
 ## Installation
 
-1. On your OctoPrint/OctoPi, clone this repository - make sure you're working as `root` user:
-
-    ```shell
-    sudo su
-    git clone https://github.com/frdmn/octoprint-usb-autoconnect /usr/local/src/octoprint-usb-autoconnect
-    ```
-
-2. Obtain your API key from [OctoPrint settings](https://up.frd.mn/Fcjb2ihnru.jpg), copy and adjust the default configuration file:
-
-    ```shell
-    cp /usr/local/src/octoprint-usb-autoconnect/octoprint_usb_autoconnect.conf.sample /usr/local/src/octoprint-usb-autoconnect/octoprint_usb_autoconnect.conf
-    editor /usr/local/src/octoprint-usb-autoconnect/octoprint_usb_autoconnect.conf
-    ```
+1. On your Pi/Klipper Host, clone this repository - make sure you're working as `root` user:
 
 3. Symlink (or copy) script and service:
 
     ```shell
-    ln -s /usr/local/src/octoprint-usb-autoconnect/octoprint_usb_autoconnect /usr/local/bin/octoprint_usb_autoconnect
-    ln -s /usr/local/src/octoprint-usb-autoconnect/octoprint_usb_autoconnect.service /etc/systemd/system/octoprint_usb_autoconnect.service
+    cp klipper_usb_autoconnect /usr/local/bin/klipper_usb_autoconnect
+    klipper_usb_autoconnect.service /etc/systemd/system/klipper_usb_autoconnect.service
     ```
 
 4. Create the `udev` USB hook:
 
     ```shell
-    editor /etc/udev/rules.d/40-octoprint_usb_autoconnect.rules
+    editor /etc/udev/rules.d/40-klipper_usb_autoconnect.rules
     ```
 
     ```
-    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0403", ATTR{idProduct}=="6001", TAG+="systemd", ENV{SYSTEMD_WANTS}="octoprint_usb_autoconnect.service"
+    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0403", ATTR{idProduct}=="6001", TAG+="systemd", ENV{SYSTEMD_WANTS}="klipper_usb_autoconnect.service"
     ```
 
     (Please note that the hook above is for an Creality Ender-3, if you have a different printer you can use `lsusb` and `lsusb -vs 00X:00Y` to find the proper `idVendor` and `idProduct` numbers. See "[Find out idVendor / idProduct](#find-out-idvendor--idproduct)" for more more detailed guide.)
@@ -90,21 +73,8 @@ The script was made to work with an Creality Ender 3. In case you have a differe
 ### Run script manually, verbose mode
 
 ```shell
-pi@octopi:~ $ bash -x /usr/local/bin/octoprint_usb_autoconnect
-+ CONFIGFILE=/usr/local/src/octoprint-usb-autoconnect/octoprint_usb_autoconnect.conf
-+ '[' '!' -f /usr/local/src/octoprint-usb-autoconnect/octoprint_usb_autoconnect.conf ']'
-+ . /usr/local/src/octoprint-usb-autoconnect/octoprint_usb_autoconnect.conf
-++ APIKEY=XXX
-++ OCTOHOST=http://localhost
-+ curl -siL -X POST -H 'X-Api-Key: XXX' -H 'Content-Type: application/json' http://localhost/api/connection -d '{"command":"connect"}'
-HTTP/1.1 204 NO CONTENT
-Content-Length: 0
-X-Robots-Tag: noindex, nofollow, noimageindex
-Expires: -1
-Pragma: no-cache
-Cache-Control: pre-check=0, no-cache, no-store, must-revalidate, post-check=0, max-age=0
-X-Clacks-Overhead: GNU Terry Pratchett
-Content-Type: text/html; charset=utf-8
+pi@octopi:~ $ bash -x /usr/local/bin/klipper_usb_autoconnect
+{"result": "ok"
 pi@octopi:~ $
 ```
 
@@ -160,12 +130,12 @@ git push origin feature/my-new-feature
 
 ## Requirements / Dependencies
 
-* OctoPrint
+* Klipper with Fluidd or Mainsail (they use Moonraker API for printer comms)
 * systemd / udev compatible system
 
 ## Version
 
-1.0.1
+0.1
 
 ## License
 
