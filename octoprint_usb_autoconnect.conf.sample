@@ -1,2 +1,2 @@
-APIKEY=""
-OCTOHOST="http://localhost"
+HOST="localhost"
+PORT="7125"
